@@ -82,7 +82,7 @@ const updateArticleById = async (req, res, next) => {
             req.params.id,
             value,
             {
-                new: true,
+                returnDocument: 'after',
                 runValidators: true,
             }
         );
