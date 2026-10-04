@@ -30,17 +30,17 @@ const postArticle = async (req, res, next) => {
 
 const getArticles = async (req, res, next) => {
     try {
-        const { limit = 10, page = 1 } = req.query;
-        const skip = (page - 1) + limit;
+        const pageNum = parseInt(req.query.page, 10) || 1;
+        const limitNum = parseInt(req.query.limit, 10) || 10;
+        const skip = (pageNum - 1) * limitNum;
+
         const allArticles = await ArticleModel.find({})
             .sort({ createdAt: -1 })
-            .limit(limit)
+            .limit(limitNum)
             .skip(skip);
 
-        res.status(200).json(allArticles)
-
-    }
-    catch (error) {
+        res.status(200).json(allArticles);
+    } catch (error) {
         console.error(error)
         next(error)
     }
@@ -69,8 +69,8 @@ const updateArticleById = async (req, res, next) => {
     const articleSchema = Joi.object({
         title: Joi.string().min(5).max(100).optional(),
         content: Joi.string().min(10).optional(),
-        author: Joi.string.optional().default('Public')
-    })
+        author: Joi.string().optional().default('Public')
+    });
 
     const { error, value } = articleSchema.validate(req.body);
     if (error) {

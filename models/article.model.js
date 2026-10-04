@@ -15,6 +15,7 @@ const ArticleSchema = new mongoose.Schema({
     author: {
         type: String,
         required: true,
+        default: 'Public'
     },
     
 }, {timestamps: true})
