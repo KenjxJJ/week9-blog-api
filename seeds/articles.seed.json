@@ -1,0 +1,12 @@
+[
+  {
+    "title": "Getting Started with Node.js and Express 5",
+    "content": "Express 5 brings built-in promise handling in middleware and route handlers, simplifying asynchronous error handling significantly.",
+    "author": "Joel Kiggwe"
+  },
+  {
+    "title": "Mastering MongoDB Indexing for High Throughput",
+    "content": "Single-field, compound, and multikey indexes can drastically reduce query latency in production MongoDB clusters.",
+    "author": "Sarah Chen"
+  }
+]
