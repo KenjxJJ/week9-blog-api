@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const {validateArticle, validateUpdateArticle} = require('../validations/post.validation');
+const { authHandler: requireAuth } = require('../middlewares/authHandler');
 const {
     postArticle,
     getArticles,
@@ -10,15 +12,16 @@ const {
 
 
 // Routes
-router.post('/articles', postArticle);
+router.post('/articles', validateArticle,
+        requireAuth, postArticle);
 
-router.get('/articles', getArticles);
+router.get('/articles', requireAuth, getArticles);
 
-router.get('/articles/:id', getArticlesById);
+router.get('/articles/:id', requireAuth, getArticlesById);
 
-router.put('/articles/:id', updateArticleById);
+router.put('/articles/:id', validateUpdateArticle, updateArticleById);
 
-router.delete('/articles/:id', deleteArticleById);
+router.delete('/articles/:id', requireAuth, deleteArticleById);
 
 
 module.exports = router;

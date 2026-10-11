@@ -1,21 +1,13 @@
-const Joi = require('joi');
 const ArticleModel = require("../models/article.model");
 
 const postArticle = async (req, res, next) => {
-    const articleSchema = Joi.object({
-        title: Joi.string().min(5).max(100).required(),
-        content: Joi.string().min(10).required(),
-        author: Joi.string().optional().default('Public')
-    });
-
-    const { error, value } = articleSchema.validate(req.body);
-
-    if (error) {
-        return res.status(400).json({ error: error.details[0].message });
-    }
-
     try {
-        const newArticle = new ArticleModel(value);
+        const { title, content } = req.body;
+        const newArticle = new ArticleModel({
+            title,
+            content,
+            author: req.user._id,
+        });
         await newArticle.save();
 
         return res.status(201).json({
@@ -66,21 +58,10 @@ const getArticlesById = async (req, res, next) => {
 };
 
 const updateArticleById = async (req, res, next) => {
-    const articleSchema = Joi.object({
-        title: Joi.string().min(5).max(100).optional(),
-        content: Joi.string().min(10).optional(),
-        author: Joi.string().optional().default('Public')
-    });
-
-    const { error, value } = articleSchema.validate(req.body);
-    if (error) {
-        return res.status(400).json({ error: error.details[0].message });
-    }
-
     try {
         const updatedArticle = await ArticleModel.findByIdAndUpdate(
             req.params.id,
-            value,
+            {...req.body},
             {
                 returnDocument: 'after',
                 runValidators: true,
