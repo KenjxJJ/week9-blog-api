@@ -78,3 +78,7 @@ Thumbs.db
 *.sublime-workspace
 *.swp
 *.swo
+
+# Uploads
+uploads/*
+!uploads/.gitkeep

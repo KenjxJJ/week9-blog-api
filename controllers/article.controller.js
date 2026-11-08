@@ -1,11 +1,15 @@
+const path = require('path');
+const fs = require('fs');
 const ArticleModel = require("../models/article.model");
+const { uploadDir } = require('../middlewares/uploadHandler');
 
 const postArticle = async (req, res, next) => {
     try {
-        const { title, content } = req.body;
+        const { title, content, images } = req.body;
         const newArticle = new ArticleModel({
             title,
             content,
+            images: Array.isArray(images) ? images : [],
             author: req.user._id,
         });
         await newArticle.save();
@@ -92,6 +96,21 @@ const deleteArticleById = async (req, res, next) => {
             return res.status(404).json({
                 message: `Article with ID ${req.params.id} not found`,
             });
+        }
+
+        // Clean up attached images from uploads folder if stored locally
+        if (Array.isArray(articleToRemove.images) && articleToRemove.images.length > 0) {
+            for (const img of articleToRemove.images) {
+                try {
+                    const filename = path.basename(img);
+                    const filePath = path.join(uploadDir, filename);
+                    if (fs.existsSync(filePath)) {
+                        fs.unlinkSync(filePath);
+                    }
+                } catch (unlinkErr) {
+                    console.error(`Failed to delete image file: ${img}`, unlinkErr.message);
+                }
+            }
         }
 
         return res.status(200).json({

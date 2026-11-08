@@ -17,7 +17,14 @@ const ArticleSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
-    
+    images: {
+        type: [String],
+        validate: [
+            (val) => val.length <= 5,
+            '{PATH} exceeds the maximum limit of 5 images'
+        ],
+        default: [],
+    },
 }, {timestamps: true})
 
 
