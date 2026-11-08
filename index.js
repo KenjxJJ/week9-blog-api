@@ -13,6 +13,8 @@ const UploadRoutes = require('./routes/upload.route');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.enable('trust proxy');
+
 connectDB();
 
 // Global Middlewares
